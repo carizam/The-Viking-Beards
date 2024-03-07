@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Product = require("../models/Product");
+const Product = require("../models/productModel");
 const { authenticateUser } = require("../middleware/authMiddleware");
 
 // Ruta para obtener todos los productos

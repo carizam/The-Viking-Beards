@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Cart = require("../models/Cart");
+const Cart = require("../models/cartModel");
 const { authenticateUser } = require("../middleware/authMiddleware");
 
 // Ruta para obtener el carrito de un usuario

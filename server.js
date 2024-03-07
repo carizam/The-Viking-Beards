@@ -3,11 +3,16 @@ const express = require("express");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
-const handlebars = require("express-handlebars");
+const { engine } = require("express-handlebars");
 const productsRoutes = require("./src/routes/productsRoutes");
 const cartsRoutes = require("./src/routes/cartsRoutes");
 const authRoutes = require("./src/routes/authRoutes");
 const viewRoutes = require("./src/routes/viewRoutes");
+
+// Asignar valores de variables de entorno a variables
+const port = process.env.PORT || 3000;
+const sessionSecret = process.env.SESSION_SECRET;
+const mongoUri = process.env.MONGO_URI;
 
 // Conectar a MongoDB
 mongoose.connect(process.env.MONGO_URL, {
@@ -20,7 +25,7 @@ mongoose.connection.on("error", (error) => console.error(error));
 const app = express();
 
 // Configurar el motor de plantillas Handlebars
-app.engine("handlebars", handlebars());
+app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
 app.set("views", "./src/views");
 
@@ -33,7 +38,9 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URL,
+    }),
   })
 );
 
