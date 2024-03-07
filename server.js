@@ -62,8 +62,9 @@ app.use("/api/carts", cartsRoutes);
 app.use("/", authRoutes);
 app.use("/", viewRoutes);
 
-app.get("/", (req, res) => {
+app.get("/index", (req, res) => {
   // Renderizar la vista de inicio, que puede ser 'index.handlebars'
+  res.send("Página de inicio cargada correctamente.");
   res.render("index");
 });
 
