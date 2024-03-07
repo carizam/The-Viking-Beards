@@ -1,4 +1,5 @@
 require("dotenv").config();
+console.log(process.env.SESSION_SECRET);
 const express = require("express");
 const mongoose = require("mongoose");
 const session = require("express-session");
@@ -10,9 +11,9 @@ const authRoutes = require("./src/routes/authRoutes");
 const viewRoutes = require("./src/routes/viewRoutes");
 
 // Asignar valores de variables de entorno a variables
-const port = process.env.PORT || 3000;
-const sessionSecret = process.env.SESSION_SECRET;
-const mongoUri = process.env.MONGO_URI;
+const PORT = process.env.PORT || 3000;
+const SESSION_SECRET = process.env.SESSION_SECRET;
+const MONGO_URL = process.env.MONGO_URL;
 
 // Conectar a MongoDB
 mongoose.connect(process.env.MONGO_URL, {
@@ -35,11 +36,11 @@ app.use(express.json());
 // Configurar la sesión
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URL,
+      mongoUrl: MONGO_URL,
     }),
   })
 );
@@ -60,6 +61,11 @@ app.use("/api/products", productsRoutes);
 app.use("/api/carts", cartsRoutes);
 app.use("/", authRoutes);
 app.use("/", viewRoutes);
+
+app.get("/", (req, res) => {
+  // Renderizar la vista de inicio, que puede ser 'index.handlebars'
+  res.render("index");
+});
 
 // Validar las rutas de vistas
 app.get("/profile", authenticateUser, (req, res) => {
@@ -88,7 +94,6 @@ app.get("/register", (req, res) => {
 });
 
 // Iniciar el servidor
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () =>
   console.log(`Servidor en ejecución en el puerto ${PORT}`)
 );
