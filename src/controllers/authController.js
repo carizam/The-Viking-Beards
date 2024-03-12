@@ -6,7 +6,13 @@ const authController = {
       const { firstName, lastName, email, age, password } = req.body;
       const newUser = new User({ firstName, lastName, email, age, password });
       await newUser.save();
-      res.status(201).json(newUser);
+      res.status(201).json({
+        id: newUser._id,
+        first_name: newUser.first_name,
+        last_name: newUser.last_name,
+        email: newUser.email,
+        age: newUser.age,
+      });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
